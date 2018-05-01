@@ -5,11 +5,13 @@ int position_normalizer = 10;
 int selectedIndex = 0;
 
 class AtBat {
+  public String id;
   public float x;
   public float y;
   public boolean hit;
   
-  public AtBat(float x, float y, boolean hit) {
+  public AtBat(String id, float x, float y, boolean hit) {
+    this.id = id;
     this.x = x;
     this.y = y;
     this.hit = hit;
@@ -38,15 +40,18 @@ class Batter {
   
   private void load_at_bats() {
     ArrayList<AtBat> at_bat_al = new ArrayList();
-    String query = "select px,pz,type from atbat join pitch using (num, url) where batter = '" + this.id + "'";
+    String query = "select px,pz,type,num||url as id from atbat join pitch using (num, url) where batter = '" + this.id + "'";
     db.query(query);
     while (db.next()) {
       float x = db.getFloat("px");
       float y = db.getFloat("pz");
-      String result = db.getString("type");
-      boolean hit = result.equals("X");
-      AtBat ab = new AtBat(x, y, hit);
-      at_bat_al.add(ab);
+      if (x != 0 && y != 0) {
+        String result = db.getString("type");
+        String id = db.getString("id");
+        boolean hit = result.equals("X");
+        AtBat ab = new AtBat(id, x, y, hit);
+        at_bat_al.add(ab);
+      }
     }
     this.at_bats = at_bat_al.toArray(new AtBat[at_bat_al.size()]);
   }
@@ -60,8 +65,8 @@ class Batter {
       AtBat a = bats[i];
       float normalized_x = (a.x / position_normalizer) * center_x;
       float normalized_y = (a.y / position_normalizer) * center_y;
-      float fx = normalized_x + center_x;
-      float fy = normalized_y + center_y;
+      float fx = center_x + normalized_x;
+      float fy = center_y - normalized_y;
       
       if (a.hit) {
         stroke(#FF0000, 5);
