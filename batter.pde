@@ -74,7 +74,7 @@ class Batter implements Drawable {
       if (x != 0 && y != 0) {
         char type = this.classify_swing(db.getString("des"));
         String id = db.getString("id");
-        AtBat ab = new AtBat(id, x, y, type);
+        AtBat ab = new AtBat(id, -x, y, type);
         at_bat_al.add(ab);
       }
     }
@@ -132,7 +132,7 @@ class Batter implements Drawable {
     textAlign(LEFT, TOP);
     fill(#000000);
     textSize(20);
-    text(" " + name, 10, 50);
+    text(name, 10, 50);
   
     popStyle();
   }

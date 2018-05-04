@@ -54,7 +54,7 @@ void setup() {
     println("couldn't connect to database!");
     exit();
   }
-  strikeButton = new MagicButton(10, 100, 10, "Strikes", 20, new Runnable() {
+  strikeButton = new MagicButton(10, 100, 10, "Show Swinging Strikes", 20, new Runnable() {
     @Override
     public void run() {
       big = !big;
@@ -67,12 +67,12 @@ void setup() {
   });
 }
 
-void frameRate() {
+void showStatus(String status) {
   pushStyle();
   textAlign(LEFT, TOP);
   fill(#000000);
   textSize(20);
-  text(frameRate, 10, 10);
+  text(status, 10, 10);
   popStyle();
 }
 
@@ -89,10 +89,11 @@ void draw() {
     line(0, height / 2.0, width, height / 2.0);
     b.draw(center_x, height, 'S');
   }
-  frameRate();
+  //showStatus("FPS: " + frameRate);
 }
 
 void keyPressed() {
+  showStatus("Loading...");
   if (key == CODED) {
     if (keyCode == UP) {
       selectedIndex -= 1;
